@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#09090a">
+  <meta name="color-scheme" content="dark">
+  <title>Aurum Exchange</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <canvas id="dust" aria-hidden="true"></canvas>
+
+  <div class="app">
+    <!-- Header -->
+    <header class="top">
+      <div class="brand">
+        <svg class="emblem" viewBox="0 0 48 48" aria-hidden="true">
+          <defs>
+            <linearGradient id="gEm" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#F7E1A1"/>
+              <stop offset=".5" stop-color="#D6AA4C"/>
+              <stop offset="1" stop-color="#8C6519"/>
+            </linearGradient>
+          </defs>
+          <path d="M24 2.5 42.6 13.25v21.5L24 45.5 5.4 34.75v-21.5Z" fill="rgba(214,170,76,.08)" stroke="url(#gEm)" stroke-width="1.6"/>
+          <path d="M24 8.5 37.4 16.25v15.5L24 39.5 10.6 31.75v-15.5Z" fill="none" stroke="url(#gEm)" stroke-width=".8" opacity=".45"/>
+          <path d="M15.5 33.5 24 14l8.5 19.5" fill="none" stroke="url(#gEm)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M17.5 27h11.5m-3-3 3 3-3 3" fill="none" stroke="url(#gEm)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="brand-text">
+          <div class="brand-name" id="brandName">Aurum Exchange</div>
+          <div class="brand-tag" data-i18n="tagline"></div>
+        </div>
+      </div>
+      <button class="lang-btn" id="langBtn" type="button" aria-label="Language">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3Z"/></svg>
+        <span id="langCode">EN</span>
+      </button>
+    </header>
+
+    <div class="status-row">
+      <span class="pill"><i class="dot ok"></i><span data-i18n="online"></span></span>
+      <span class="pill" id="rateStatus"><i class="dot"></i><span></span></span>
+    </div>
+
+    <main>
+      <!-- ===== Exchange ===== -->
+      <section class="view active" id="view-exchange" aria-labelledby="tab-exchange">
+        <div class="card swap-card">
+          <div class="field">
+            <div class="field-top"><span data-i18n="give"></span><span class="hint" id="giveHint"></span></div>
+            <div class="field-row">
+              <input id="giveAmt" class="amount" inputmode="decimal" autocomplete="off" placeholder="0" aria-label="give amount">
+              <button class="asset-btn" id="giveAsset" type="button"></button>
+            </div>
+          </div>
+
+          <button class="swap-btn" id="swapBtn" type="button" aria-label="Swap">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16m0 0-4-4m4 4 4-4M17 20V4m0 0 4 4m-4-4-4 4"/></svg>
+          </button>
+
+          <div class="field">
+            <div class="field-top"><span data-i18n="get"></span><span class="hint" id="getHint"></span></div>
+            <div class="field-row">
+              <input id="getAmt" class="amount" inputmode="decimal" autocomplete="off" placeholder="0" aria-label="get amount">
+              <button class="asset-btn" id="getAsset" type="button"></button>
+            </div>
+          </div>
+
+          <div class="rate-line">
+            <span id="rateText"></span>
+            <span class="timer" id="rateTimer"></span>
+          </div>
+        </div>
+
+        <div class="card" id="netBlock"></div>
+
+        <div class="card" id="methodBlock">
+          <div class="label" id="methodLabel"></div>
+          <div class="methods" id="methodGrid"></div>
+          <div class="label sub" data-i18n="bank"></div>
+          <div class="chips" id="bankChips"></div>
+        </div>
+
+        <div class="card">
+          <label class="label" id="detailsLabel" for="details"></label>
+          <input id="details" class="text-input" dir="auto" autocomplete="off" spellcheck="false">
+        </div>
+
+        <div class="err" id="err" role="alert"></div>
+        <button class="gold-btn" id="createBtn" type="button"><span data-i18n="create"></span></button>
+        <p class="fine" data-i18n="fee_note"></p>
+
+        <div class="card steps">
+          <div class="label" data-i18n="how_title"></div>
+          <ol>
+            <li data-i18n="step1"></li>
+            <li data-i18n="step2"></li>
+            <li data-i18n="step3"></li>
+            <li data-i18n="step4"></li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- ===== Rates ===== -->
+      <section class="view" id="view-rates">
+        <h1 class="h1" data-i18n="rates_title"></h1>
+        <p class="sub-h" data-i18n="rates_sub"></p>
+        <div class="chips scroll" id="rateFiatChips"></div>
+        <div class="card list" id="rateList"></div>
+      </section>
+
+      <!-- ===== Payments ===== -->
+      <section class="view" id="view-methods">
+        <h1 class="h1" data-i18n="methods_title"></h1>
+        <p class="sub-h" data-i18n="methods_sub"></p>
+        <div id="methodsList"></div>
+      </section>
+
+      <!-- ===== Help ===== -->
+      <section class="view" id="view-help">
+        <h1 class="h1" data-i18n="help_title"></h1>
+        <div class="card hero-247">
+          <div class="big-247">24/7</div>
+          <div data-i18n="works"></div>
+        </div>
+        <div class="faq" id="faq"></div>
+        <button class="gold-btn ghost" id="contactBtn" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 4-18 7 6.5 2.5L21 4Zm0 0-7.5 16-4-6.5"/></svg>
+          <span data-i18n="contact"></span>
+        </button>
+      </section>
+    </main>
+  </div>
+
+  <!-- Tab bar -->
+  <nav class="tabbar" role="tablist">
+    <button class="tab active" data-view="exchange" id="tab-exchange" type="button" role="tab">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h14m0 0-4-4m4 4-4 4M20 16H6m0 0 4-4m-4 4 4 4"/></svg>
+      <span data-i18n="tab_exchange"></span>
+    </button>
+    <button class="tab" data-view="rates" type="button" role="tab">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16M6 15l4-5 3 3 5-7"/></svg>
+      <span data-i18n="tab_rates"></span>
+    </button>
+    <button class="tab" data-view="methods" type="button" role="tab">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M3 10h18M7 15h4"/></svg>
+      <span data-i18n="tab_methods"></span>
+    </button>
+    <button class="tab" data-view="help" type="button" role="tab">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6M12 17.2v.1"/></svg>
+      <span data-i18n="tab_help"></span>
+    </button>
+  </nav>
+
+  <!-- Bottom sheet -->
+  <div class="backdrop" id="backdrop"></div>
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true">
+    <div class="sheet-handle"></div>
+    <div id="sheetBody"></div>
+  </div>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <script src="js/config.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/rates.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
