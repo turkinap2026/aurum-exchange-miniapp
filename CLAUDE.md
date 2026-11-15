@@ -10,6 +10,11 @@
 - Пары фиат↔фиат запрещены (вторая сторона становится USDT).
 - Текст заявки для оператора — на языке `orderLang` (en).
 
+## Публикация
+- Репо: https://github.com/turkinap2026/aurum-exchange-miniapp (public, ветка `main`)
+- Сайт (GitHub Pages из корня `main`): https://turkinap2026.github.io/aurum-exchange-miniapp/ — эту ссылку ставить в BotFather → Menu Button
+- Push = публикация на живой сайт → только после «да» Kesa.
+
 ## Что где
 - `js/config.js` — бренд, оператор, наценка, минимум, валюты, способы оплаты, банки
 - `js/i18n.js` — все тексты интерфейса
