@@ -10,7 +10,7 @@ window.APP_CONFIG = {
 
   // Telegram username of the operator, without "@".
   // Orders open a chat with this account with the order text pre-filled.
-  operator: 'your_operator_username',
+  operator: 'losmanzanosfloreceran',
 
   // Language of the order text the operator receives.
   orderLang: 'en',
